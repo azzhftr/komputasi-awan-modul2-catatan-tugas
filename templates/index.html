@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catatan Tugas</title>
+  <style>
+    body { margin: 3rem auto; max-width: 38rem; padding: 0 1rem;
+           font: 1rem/1.5 system-ui, sans-serif; color: #172337; background: #f4f7fc; }
+    main { background: white; border: 1px solid #dbe3ee; border-radius: 12px; padding: 1.5rem; }
+    h1 { margin-top: 0; }
+    label { display: block; margin-bottom: .35rem; font-weight: 600; }
+    input, button { font: inherit; padding: .55rem .75rem; border-radius: 6px; }
+    input { border: 1px solid #667085; width: 100%; box-sizing: border-box; }
+    button { margin-top: .6rem; border: 0; background: #17489d; color: white; cursor: pointer; }
+    li { overflow-wrap: anywhere; margin-bottom: .4rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Catatan Tugas</h1>
+    <form action="{{ url_for('add_task') }}" method="post">
+      <label for="title">Judul tugas</label>
+      <input id="title" name="title" maxlength="120" required>
+      <button type="submit">Tambah tugas</button>
+    </form>
+    <h2>Daftar tugas</h2>
+    {% if tasks %}
+      <ul>
+        {% for task in tasks %}
+          <li>{{ task[0] }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Belum ada tugas.</p>
+    {% endif %}
+  </main>
+</body>
+</html>

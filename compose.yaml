@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment: &database_credentials
+      POSTGRES_DB: ${POSTGRES_DB:-catatan}
+      POSTGRES_USER: ${POSTGRES_USER:-catatan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Isi POSTGRES_PASSWORD di file .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-8080}:8000"
+    networks:
+      - frontend
+      - backend
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment: *database_credentials
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  postgres_data:
